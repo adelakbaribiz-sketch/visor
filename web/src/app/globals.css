@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+/*
+ * Visor design tokens.
+ *
+ * Visual identity rationale (documented per project instructions, see
+ * docs/ARCHITECTURE.md "Design system"): immigration/legal-tech is a
+ * trust-sensitive, document-heavy B2B category. We lean into a deep
+ * navy + parchment palette with a restrained warm-gold accent (used only
+ * for priority/alert signals, never decoration), paired with a serif
+ * display face for headings (gravitas, "counsel", editorial) against a
+ * plain system sans for UI text (legibility, density). No gradients,
+ * no glassmorphism, minimal motion. This is deliberately different from
+ * the sibling "saas-platform" project's default Geist/black-on-white look.
+ *
+ * Fonts are the OS/browser system stacks (ui-serif / ui-sans-serif) —
+ * not next/font/google — because this workspace has no outbound network
+ * access to fetch remote font files at build time. This is a real
+ * environment constraint, not a design choice; see LIMITATIONS.md.
+ */
+
+:root {
+  --background: #f8f6f1;
+  --surface: #ffffff;
+  --surface-muted: #f1ede4;
+  --foreground: #16233a;
+  --foreground-muted: #4b5a70;
+  --border: #dfd9c9;
+  --border-strong: #c7bfa9;
+
+  --navy-950: #0b1830;
+  --navy-900: #10253f;
+  --navy-800: #16324f;
+  --navy-700: #1f4266;
+
+  --gold-600: #a9791f;
+  --gold-500: #c89b3c;
+  --gold-100: #f6ecd4;
+
+  --success-600: #2f6f4f;
+  --success-100: #e4f1e8;
+  --warning-600: #a9640f;
+  --warning-100: #faeed9;
+  --danger-600: #a3352d;
+  --danger-100: #f7e3e1;
+  --info-600: #2f5c8f;
+  --info-100: #e6eef8;
+
+  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b1220;
+    --surface: #101a2c;
+    --surface-muted: #16233a;
+    --foreground: #eef1f6;
+    --foreground-muted: #a7b3c4;
+    --border: #23324a;
+    --border-strong: #324564;
+
+    --gold-100: #2a2110;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-navy-950: var(--navy-950);
+  --color-navy-900: var(--navy-900);
+  --color-navy-800: var(--navy-800);
+  --color-navy-700: var(--navy-700);
+
+  --color-gold-600: var(--gold-600);
+  --color-gold-500: var(--gold-500);
+  --color-gold-100: var(--gold-100);
+
+  --color-success-600: var(--success-600);
+  --color-success-100: var(--success-100);
+  --color-warning-600: var(--warning-600);
+  --color-warning-100: var(--warning-100);
+  --color-danger-600: var(--danger-600);
+  --color-danger-100: var(--danger-100);
+  --color-info-600: var(--info-600);
+  --color-info-100: var(--info-100);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--gold-100);
+  color: var(--navy-950);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Minimal, deliberate scrollbar so dense tables feel considered. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
