@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AllExceptionsFilter } from './common/all-exceptions.filter.js';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
@@ -11,6 +12,9 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
+  // Ensures every unhandled error becomes a sanitized { statusCode, message }
+  // response, never a raw stack trace — see common/all-exceptions.filter.ts.
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   const config = new DocumentBuilder()
     .setTitle('Visor API')
