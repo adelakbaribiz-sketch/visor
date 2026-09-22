@@ -1,0 +1,10 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Each sub-project has its own .gitignore for node_modules/build output/.env
