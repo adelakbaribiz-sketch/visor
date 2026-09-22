@@ -1,0 +1,16 @@
+# Decisions
+
+One line of reasoning per notable decision, per project convention.
+
+| Decision | Reasoning |
+|---|---|
+| NestJS + TypeScript + Prisma + PostgreSQL backend | Dossier listed this as an acceptable option; matches this workspace's `saas-platform` precedent, so tooling/config (oxlint, vitest, Prisma driver adapters) could be reused directly instead of re-decided. |
+| Next.js App Router + TypeScript + Tailwind frontend | Same precedent-matching reasoning; App Router's `PageProps`/`LayoutProps` typed-route helpers (Next 16) were verified against the installed version's own docs before use, not assumed from training data — see `docs/TESTING.md`. |
+| Single shared DB + `tenantId` column, no RLS | Simplest option that is still real and query-scoped; RLS was not written or tested in this sandbox, so it is not claimed — see `docs/SECURITY.md`. |
+| Frontend-first, mock-data-default | Rebalanced mid-build per explicit instruction: a reviewer opening this project should see a complete, polished, navigable product in under two minutes without needing Postgres/Docker running. |
+| Federal Register API as the one real ingestion source | Free, public, no API key, documented JSON API, and regularly publishes immigration-relevant rules from DHS/USCIS/DOS — the most defensible "one real source" choice among embassy/government sites, most of which require scraping HTML rather than a stable JSON API. |
+| Keyword/full-text search instead of an LLM for "Ask Visor" | No LLM API key was available to test against in this sandbox. Shipping an untested LLM integration that silently fails without a key would violate the no-fake-completion rule; a real Postgres FTS query is something that could actually be run and verified. |
+| System font stack instead of `next/font/google` | This sandbox has no outbound network access, so Google Fonts cannot be fetched at build time — confirmed by a failed `curl` to multiple external hosts (see `docs/LIMITATIONS.md`). A system stack renders correctly offline and still supports the intended serif/sans pairing. |
+| `node_modules` copied from the sibling `saas-platform` project instead of `npm install` | The npm registry is unreachable from this sandbox (`curl https://registry.npmjs.org` timed out). Since both projects intentionally pin near-identical dependency versions, copying an already-installed, working `node_modules` tree let the build/lint/test loop actually run and be verified, instead of stopping at "could not install dependencies." This is disclosed here rather than left silent; a real `npm install` should be run once this project has real network access, and a `package-lock.json` should be generated then (none is committed by this build for that reason). |
+| Plain `node <file>.ts` instead of `tsx` for the seed/ingestion scripts | Node 24 (installed in this sandbox) strips TypeScript types natively, verified by a smoke test; adding `tsx` as a dependency would have required a registry fetch that wasn't available. |
+| Local git history created, no remote pushed | A clean local commit history is a professional-repo baseline; creating or pushing to a remote GitHub repository is a user-facing, hard-to-reverse action reserved for explicit user confirmation, per this workspace's action-permission rules. |
