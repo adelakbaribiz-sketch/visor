@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  ATTORNEY
+  PARALEGAL
+  CLIENT
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  UNREAD
+  READ
+  DISMISSED
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  users   User[]
+  updates ImmigrationUpdate[]
+  alerts  Alert[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  tenantId     String
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         UserRole @default(PARALEGAL)
+  createdAt    DateTime @default(now())
+
+  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  alerts Alert[]
+
+  @@index([tenantId])
+}
+
+model Country {
+  id   String @id @default(cuid())
+  code String @unique
+  name String @unique
+
+  visaTypes VisaType[]
+  updates   ImmigrationUpdate[]
+}
+
+model VisaType {
+  id        String @id @default(cuid())
+  countryId String
+  code      String
+  label     String
+
+  country Country              @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  updates ImmigrationUpdate[]
+
+  @@unique([countryId, code])
+  @@index([countryId])
+}
+
+// The one real, tenant-independent ingestion + search target. tenantId is
+// nullable because updates ingested by the crawler (src/ingestion) are
+// shared reference data, not created by a specific tenant's user — see
+// docs/DATA_MODEL.md for why this differs slightly from the strict
+// single-tenant-row-owns-everything model used elsewhere.
+model ImmigrationUpdate {
+  id          String   @id @default(cuid())
+  tenantId    String?
+  title       String
+  summary     String
+  sourceUrl   String
+  sourceName  String
+  countryId   String
+  visaTypeId  String?
+  priority    Priority @default(MEDIUM)
+  publishedAt DateTime
+  ingestedAt  DateTime @default(now())
+  tags        String[] @default([])
+
+  // Natural key used by the ingestion script's upsert so re-running it
+  // against the same live source is idempotent instead of duplicating rows.
+  externalId String? @unique
+
+  tenant   Tenant?   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  country  Country   @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  visaType VisaType? @relation(fields: [visaTypeId], references: [id], onDelete: SetNull)
+  alerts   Alert[]
+
+  @@index([tenantId])
+  @@index([countryId])
+  @@index([priority])
+  @@index([publishedAt])
+}
+
+// Notification record only — no email/Telegram delivery happens. See
+// LIMITATIONS.md.
+model Alert {
+  id        String      @id @default(cuid())
+  tenantId  String
+  updateId  String
+  userId    String
+  status    AlertStatus @default(UNREAD)
+  channel   String      @default("IN_APP")
+  createdAt DateTime    @default(now())
+
+  tenant Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  update ImmigrationUpdate @relation(fields: [updateId], references: [id], onDelete: Cascade)
+  user   User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([userId])
+}
