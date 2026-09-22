@@ -31,9 +31,11 @@ JWT payload: `{ sub: userId, tenantId, role }`, signed with `JWT_SECRET`, expiri
 
 ## Updates (`api/src/updates`)
 
-### `GET /api/updates?countryId=&visaTypeId=&priority=`
-Any authenticated role. Returns up to 200 `ImmigrationUpdate` rows (with `country`/`visaType`
-included), newest `publishedAt` first.
+### `GET /api/updates?countryId=&visaTypeId=&priority=&page=&pageSize=`
+Any authenticated role. Returns `ImmigrationUpdate` rows (with `country`/`visaType` included),
+newest `publishedAt` first, as a plain array (unchanged response shape). `page`/`pageSize` are
+optional (added in the upgrade pass, see `docs/UPGRADE-REPORT.md`); with neither supplied, behaves
+exactly as before (up to 200 rows). `pageSize` is capped at 100 regardless of what's requested.
 
 ### `GET /api/updates/stats`
 Any authenticated role. Returns `{ total, byPriority, byCountry }` — real aggregate counts via
@@ -70,7 +72,8 @@ verified.
 ## Search (`api/src/search`)
 
 ### `GET /api/search?q=<text>`
-Any authenticated role. Backs the "Ask Visor" chat UI.
+Any authenticated role. Backs the "Ask Visor" chat UI. `q` is validated (max 200 characters) via
+`SearchQueryDto` rather than read as a raw, unbounded query param.
 ```json
 {
   "query": "H-1B fee",
@@ -85,9 +88,10 @@ LLM call — see `docs/ARCHITECTURE.md` "Chatbot".
 
 ## Alerts (`api/src/alerts`)
 
-### `GET /api/alerts`
-Any authenticated role. Returns up to 200 `Alert` records for the caller's tenant, including the
-related `update` and `user`, newest first. Record only — no delivery (see
+### `GET /api/alerts?page=&pageSize=`
+Any authenticated role. Returns `Alert` records for the caller's tenant, including the related
+`update` and `user`, newest first, as a plain array. Same optional `page`/`pageSize` pagination as
+`GET /api/updates` (default: up to 200, unchanged from before). Record only — no delivery (see
 `docs/LIMITATIONS.md`).
 
 ## Health

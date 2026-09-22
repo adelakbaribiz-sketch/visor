@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { resolvePagination } from '../common/pagination.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { CreateUpdateDto } from './dto/create-update.dto.js';
 import type { QueryUpdatesDto } from './dto/query-updates.dto.js';
@@ -8,6 +9,9 @@ export class UpdatesService {
   constructor(private readonly prisma: PrismaService) {}
 
   findAll(query: QueryUpdatesDto) {
+    // Optional page/pageSize (see common/pagination.dto.ts); omitting both
+    // preserves the previous hardcoded `take: 200` behavior exactly.
+    const { skip, take } = resolvePagination(query);
     return this.prisma.immigrationUpdate.findMany({
       where: {
         countryId: query.countryId,
@@ -16,7 +20,8 @@ export class UpdatesService {
       },
       include: { country: true, visaType: true },
       orderBy: { publishedAt: 'desc' },
-      take: 200,
+      skip,
+      take,
     });
   }
 
