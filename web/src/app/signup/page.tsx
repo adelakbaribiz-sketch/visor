@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { VisorMark } from "@/components/AppShell";
+import { Surface } from "@/components/Surface";
 
 export default function SignupPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -16,7 +17,7 @@ export default function SignupPage() {
             Visor
           </span>
         </div>
-        <div className="rounded-lg border border-border bg-surface p-6">
+        <Surface padding="lg">
           {submitted ? (
             <div className="text-center">
               <h1 className="font-display text-lg text-navy-900 dark:text-foreground">
@@ -80,7 +81,7 @@ export default function SignupPage() {
               </form>
             </>
           )}
-        </div>
+        </Surface>
         <p className="mt-4 text-center text-xs text-foreground-muted">
           Already have access? <Link href="/login" className="underline">Log in</Link>
         </p>

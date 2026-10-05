@@ -1,9 +1,10 @@
 import { DemoDataBadge } from "@/components/Badge";
+import { Surface } from "@/components/Surface";
 import { DEMO_USERS, DEMO_TENANT } from "@/lib/data/fixtures";
 
 const STATUS_ROWS: { area: string; status: string; note: string }[] = [
   { area: "Authentication (this frontend)", status: "MOCK", note: "localStorage session, any password accepted for a seeded email" },
-  { area: "Authentication (api/ service)", status: "REAL", note: "JWT + bcrypt, verified against a running Postgres instance — see docs/DEMO.md" },
+  { area: "Authentication (api/ service)", status: "REAL", note: "JWT + bcrypt, covered by unit tests with a mocked database; never run against a live Postgres in the build sandbox — see docs/LIMITATIONS.md" },
   { area: "Update data shown here", status: "SIMULATED", note: "Fictional seed fixtures, not a live crawl" },
   { area: "Federal Register ingestion script", status: "REAL, UNVERIFIED IN THIS SANDBOX", note: "Fetch/parse/store code exists in api/src/ingestion; this environment has no outbound network access to run it against the live API" },
   { area: "Chat search", status: "REAL", note: "Keyword match over the records in this browser session" },
@@ -25,7 +26,7 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <section className="rounded-lg border border-border bg-surface p-5">
+      <Surface as="section">
         <h2 className="font-display text-base text-navy-900 dark:text-foreground">
           Workspace
         </h2>
@@ -39,9 +40,9 @@ export default function SettingsPage() {
             <dd>{DEMO_TENANT.planLabel}</dd>
           </div>
         </dl>
-      </section>
+      </Surface>
 
-      <section className="rounded-lg border border-border bg-surface p-5">
+      <Surface as="section">
         <h2 className="font-display text-base text-navy-900 dark:text-foreground">
           Team
         </h2>
@@ -70,9 +71,9 @@ export default function SettingsPage() {
         <p className="mt-3 text-xs text-foreground-muted">
           Inviting new team members is not implemented in this demo.
         </p>
-      </section>
+      </Surface>
 
-      <section className="rounded-lg border border-border bg-surface p-5">
+      <Surface as="section">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-base text-navy-900 dark:text-foreground">
             What&apos;s real in this build
@@ -94,7 +95,7 @@ export default function SettingsPage() {
             </div>
           ))}
         </div>
-      </section>
+      </Surface>
     </div>
   );
 }

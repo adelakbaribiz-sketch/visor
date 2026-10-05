@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { COUNTRIES, VISA_TYPES } from "@/lib/data/fixtures";
+import { Surface } from "@/components/Surface";
 
 const STEPS = ["Firm details", "Countries you track", "Invite your team"];
 
@@ -53,7 +54,7 @@ export default function OnboardingPage() {
         ))}
       </div>
 
-      <div className="rounded-lg border border-border bg-surface p-6">
+      <Surface padding="lg">
         {step === 0 && (
           <div className="space-y-3">
             <label className="block text-xs font-medium text-foreground-muted">
@@ -113,7 +114,7 @@ export default function OnboardingPage() {
             />
           </div>
         )}
-      </div>
+      </Surface>
 
       <div className="flex justify-between">
         <button

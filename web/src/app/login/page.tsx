@@ -6,6 +6,7 @@ import { Suspense, useState } from "react";
 import { VisorMark } from "@/components/AppShell";
 import { login } from "@/lib/auth";
 import { DEMO_USERS } from "@/lib/data/fixtures";
+import { Surface } from "@/components/Surface";
 
 function LoginForm() {
   const router = useRouter();
@@ -34,7 +35,7 @@ function LoginForm() {
             Visor
           </span>
         </div>
-        <div className="rounded-lg border border-border bg-surface p-6">
+        <Surface padding="lg">
           <h1 className="font-display text-lg text-navy-900 dark:text-foreground">
             Log in to your workspace
           </h1>
@@ -75,7 +76,7 @@ function LoginForm() {
               Log in
             </button>
           </form>
-        </div>
+        </Surface>
         <div className="mt-4 rounded-lg border border-border bg-surface-muted p-4 text-xs text-foreground-muted">
           <p className="font-medium text-foreground">Demo accounts</p>
           <ul className="mt-2 space-y-1">

@@ -7,6 +7,7 @@ import {
   getUpdates,
   getVisaTypeById,
 } from "@/lib/data/client";
+import { Surface } from "@/components/Surface";
 
 export default async function UpdateDetailPage({
   params,
@@ -28,7 +29,7 @@ export default async function UpdateDetailPage({
         ← Back to updates
       </Link>
 
-      <div className="rounded-lg border border-border bg-surface p-6">
+      <Surface padding="lg">
         <div className="flex items-start justify-between gap-4">
           <h1 className="font-display text-2xl text-navy-900 dark:text-foreground">
             {update.title}
@@ -76,10 +77,10 @@ export default async function UpdateDetailPage({
             government notice. See docs/DEMO.md.
           </p>
         </div>
-      </div>
+      </Surface>
 
       {relatedOthers.length > 0 && (
-        <div className="rounded-lg border border-border bg-surface p-5">
+        <Surface>
           <h2 className="font-display text-base text-navy-900 dark:text-foreground">
             More from {country?.name}
           </h2>
@@ -95,7 +96,7 @@ export default async function UpdateDetailPage({
               </li>
             ))}
           </ul>
-        </div>
+        </Surface>
       )}
     </div>
   );

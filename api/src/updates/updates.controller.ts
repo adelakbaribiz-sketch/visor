@@ -42,8 +42,10 @@ export class UpdatesController {
   // The one write endpoint enforcing roles at the API layer: only ADMIN and
   // ATTORNEY accounts may create an update by hand. PARALEGAL/CLIENT tokens
   // are authenticated (pass JwtAuthGuard) but get a 403 from RolesGuard.
-  // Verified with a real request against a running Postgres instance — see
-  // docs/DEMO.md for the exact commands run and their output.
+  // The role check itself is unit-tested (roles.guard.spec.ts). This route
+  // has NOT been exercised over HTTP against a live Postgres in the build
+  // sandbox (no Docker/network) — see docs/LIMITATIONS.md. docs/DEMO.md
+  // lists the commands to run it yourself.
   @UseGuards(RolesGuard)
   @Roles('ADMIN', 'ATTORNEY')
   @Post()
