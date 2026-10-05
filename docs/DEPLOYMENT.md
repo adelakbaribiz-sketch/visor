@@ -14,9 +14,16 @@ the host to avoid colliding with the sibling `saas-platform` project's Postgres 
 validated in this build (see `docs/TESTING.md`); `docker compose up` was not run here due to a
 sandbox Docker daemon issue — see `docs/LIMITATIONS.md`.
 
+`JWT_SECRET` is now **required** (no default). In production mode the API also refuses to start with
+the placeholder value or a secret under 32 characters:
+
 ```bash
-docker compose up --build
+JWT_SECRET=$(openssl rand -hex 32) docker compose up --build
 ```
+
+The Dockerfiles run as the non-root `node` user and the API image has a `HEALTHCHECK` on
+`/api/health`; neither has been built in this environment. Neither project has a committed
+lockfile, so builds and CI use `npm install` until one is added.
 
 ## Hypothetical hosted deployment (not set up, not attempted)
 

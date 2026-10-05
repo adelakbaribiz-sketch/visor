@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-23 — Upgrade pass
+
+See `docs/UPGRADE-REPORT.md` for the before/after table. Summary:
+
+- Security: login/register rate limiting, security headers, sanitized errors, fail-fast production
+  JWT secret check, required compose secret, tenant scoping of update/search reads, non-root containers.
+- Backend: optional capped pagination, validated search query.
+- Frontend: elevation/motion tokens, `Surface`/`ElevatedSurface`, KPI cards elevated, panels
+  consolidated; corrected two claims that overstated verification.
+- DevOps: CI and Docker builds no longer require a lockfile; API healthcheck.
+- Tests: 9 -> 33 backend unit tests. Still not run: Docker, live DB, live ingestion, CI on GitHub.
+
 ## 2026-09-22 — Initial MVP build
 
 - Scaffolded `web/` (Next.js 16 App Router, TypeScript, Tailwind v4) and `api/` (NestJS 12, Prisma

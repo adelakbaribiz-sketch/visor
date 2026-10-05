@@ -114,8 +114,10 @@ Full spec: `docs/API_SPEC.md`. Interactive docs at `/api/docs` when the server i
 ## Security
 
 Real: bcrypt password hashing, JWT auth, a tested role guard, `class-validator` input validation,
-tenant-scoped queries, restricted CORS. Not implemented: SSO, rate limiting, RLS, dependency
-scanning in this sandbox. Full breakdown: `docs/SECURITY.md`.
+tenant-scoped queries (including shared-or-own scoping of update reads and search), restricted
+CORS, per-process login/register rate limiting, security headers, sanitized errors, and a
+fail-fast production JWT-secret check. Not implemented: SSO, distributed rate limiting, token
+revocation, RLS, dependency scanning in this sandbox. Full breakdown: `docs/SECURITY.md`.
 
 ## Roadmap / limitations / future development
 
@@ -214,6 +216,7 @@ choice.
 | Frontend demo auth | MOCKED — `localStorage`, no real password check, clearly labeled |
 | Backend auth (JWT, bcrypt) | REAL — unit tested |
 | Backend role enforcement | REAL — unit tested (`RolesGuard`, 4 tests) |
+| Backend unit suite | REAL — 33 tests, mocked database; no live-DB run (see `docs/TESTING.md`) |
 | Backend full-text search | REAL — builds/lints clean; not exercised against a live DB in this sandbox |
 | Federal Register ingestion | REAL CODE — execution against the live API not verified in this sandbox |
 | Alert records | REAL (storage/listing) — delivery NOT IMPLEMENTED |

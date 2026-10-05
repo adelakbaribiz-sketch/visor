@@ -20,7 +20,23 @@ Because of the above, `node_modules` for both `web/` and `api/` were copied from
 already-installed `saas-platform` project (same pinned dependency versions) rather than freshly
 `npm install`ed — see `docs/DECISIONS.md`.
 
-## web/ (Next.js frontend)
+## Upgrade pass (2026-09-23 onward) — what was run
+
+Same environment constraints, re-checked: `docker info` cannot reach the daemon; the Federal Register
+URL returns no response. Results of this pass:
+
+| Command | Result |
+|---|---|
+| `api`: `npm run lint`, `npm run build` | **PASSED** after each change group. |
+| `api`: `npm test` | **PASSED — 33/33 tests in 9 files** (was 9/9 in 2 files). New: `rate-limit.guard.spec` (5), `all-exceptions.filter.spec` (2), `security-headers.middleware.spec` (2), `pagination.dto.spec` (5), `jwt-secret.spec` (4), `updates.service.spec` (4, tenant-scoping regression tests with a mocked Prisma client), `search.service.spec` (2, asserts the tenant clause and bound parameter in the SQL template; not executed against Postgres). |
+| `web`: `npm run lint`, `npm run build` | **PASSED** after each change group (11 routes). |
+| `docker compose config` with `JWT_SECRET` unset | **Fails as intended** ("required variable JWT_SECRET is missing a value"); with it set, resolves. |
+| Production `next start` + browser DOM/computed-style check of `/dashboard` | **PASSED**: KPI cards resolve `--elevation-1` brand-tinted shadow and a `transform, box-shadow` 0.18s transition; in dark emulation the dark shadow set applies; no horizontal overflow at 375px; no console errors. Screenshots timed out (browser pane hidden), so no visual inspection by eye. |
+| Docker image builds, `docker compose up`, live-DB HTTP flow, live ingestion, CI on GitHub runners, `npm audit` | **NOT RUN** (no daemon / no network). |
+
+Frontend still has no automated tests (no test runner is installed and none could be added offline).
+
+## web/ (Next.js frontend) — original build verification
 
 | Command | Result |
 |---|---|
@@ -30,7 +46,7 @@ already-installed `saas-platform` project (same pinned dependency versions) rath
 | Console errors | **NONE** observed via `read_console_messages` during the walkthrough. |
 | Responsive check | **PASSED** at 375×812 (mobile preset) — sidebar collapses to a bottom tab bar, dashboard cards stack to one column, charts remain legible. |
 
-## api/ (NestJS backend)
+## api/ (NestJS backend) — original build verification (historical; current counts are in the upgrade-pass table above)
 
 | Command | Result |
 |---|---|

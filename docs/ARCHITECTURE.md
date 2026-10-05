@@ -60,6 +60,13 @@ projects.
   not a charting library — there's only two chart types needed, and it avoids an unnecessary
   dependency.
 
+**Elevation and surfaces (upgrade pass).** `globals.css` now also defines `--elevation-1/2` (shadows
+tinted with the brand navy, with a separately designed dark-mode set) and `--motion-*` tokens, plus a
+global `prefers-reduced-motion` rule. `web/src/components/Surface.tsx` exports `Surface` (flat panel,
+replaces the card classes that were copy-pasted ~18 times) and `ElevatedSurface` (adds depth and a
+`transform`/`box-shadow` hover-lift). Depth is reserved for the dashboard KPI `StatCard`; dense
+panels stay flat. No WebGL, no gradients, no glass effects.
+
 Full rationale is also inlined as a comment at the top of `web/src/app/globals.css`.
 
 ## Frontend data layer
@@ -102,6 +109,7 @@ Minimal NestJS modules, each with a single responsibility:
 | `updates` | CRUD-lite over `ImmigrationUpdate` — list/filter/get (any authenticated role), create (ADMIN/ATTORNEY only, enforced by `RolesGuard`) |
 | `search` | Real Postgres full-text search (`to_tsvector`/`ts_rank`, ILIKE fallback) backing the chat UI |
 | `alerts` | List notification records for the current tenant |
+| `common` | Cross-cutting pieces with no business logic: `RateLimitGuard`, `SecurityHeadersMiddleware`, `AllExceptionsFilter` (registered globally in `main.ts`/`app.module.ts`), pagination DTO + resolver |
 | `health` | `/api/health` — checks the DB connection with `SELECT 1` |
 | `ingestion` (script, not a module) | Standalone script; not part of the HTTP API — see below |
 
@@ -144,6 +152,8 @@ column, and every query scopes by it (e.g. `alerts.service.ts` always filters
 `where: { tenantId }`, sourced from the authenticated JWT's `tenantId` claim, never a client-
 supplied value). `ImmigrationUpdate.tenantId` is nullable because records ingested from a public
 source (like the Federal Register script) are shared reference data, not owned by one tenant.
+
+Update reads (`findAll`, `findOne`, `stats`, search) apply "shared (NULL) OR the caller's tenant".
 
 This is the simplest real option that still demonstrates tenant isolation. Postgres Row-Level
 Security (RLS) policies were considered and explicitly **not** implemented, because they were not

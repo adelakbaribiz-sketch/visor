@@ -33,8 +33,8 @@ confirmation of something already tested.
 
 ```bash
 cd visor
-cp api/.env.example api/.env      # already provided; edit JWT_SECRET for anything beyond local demo use
-docker compose up --build
+cp api/.env.example api/.env      # for running the API outside Docker
+JWT_SECRET=$(openssl rand -hex 32) docker compose up --build   # compose requires JWT_SECRET (32+ chars)
 ```
 
 Once `postgres` reports healthy and `api` has started:

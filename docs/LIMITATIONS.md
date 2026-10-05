@@ -5,6 +5,12 @@ other doc or UI copy seems to say something stronger than this file, this file w
 
 ## Sandbox limitations (environment, not product design)
 
+**Re-verified during the upgrade pass (2026-09-23):** the Docker CLI is installed but
+`docker info` still fails with `failed to connect to the docker API at
+npipe:////./pipe/dockerDesktopLinuxEngine`, and `curl https://www.federalregister.gov/api/v1/agencies.json`
+still returns no response (HTTP 000). Everything below remains true; nothing in the upgrade pass
+changed it.
+
 - **No outbound network access** was available while building this project. Verified with `curl`
   against `federalregister.gov`, `google.com`, and `registry.npmjs.org` — all timed out. This means:
   - The real ingestion script (`api/src/ingestion/federal-register.script.ts`) has never actually
@@ -22,6 +28,17 @@ other doc or UI copy seems to say something stronger than this file, this file w
   installed and an explicit launch attempt. `docker compose config` validated the compose file
   successfully; `docker compose up` was never run, so the full containerized stack has not been
   verified to actually start.
+- **Docker image builds were never run**, so the Dockerfile changes made in the upgrade pass
+  (non-root `USER node`, API `HEALTHCHECK`, lockfile-optional install) are unbuilt. The CI workflow
+  has likewise not run on GitHub Actions yet.
+- **No lockfiles.** Neither `api/` nor `web/` has a `package-lock.json`. The upgrade pass found that
+  CI and both Dockerfiles used `npm ci` (which requires one) and would have failed at step one; they
+  now fall back to `npm install` when no lockfile exists. Commit real lockfiles from a networked
+  machine, after which `npm ci` is used automatically.
+- **No pixel-level visual QA.** In the upgrade pass the browser pane's screenshots timed out, so the
+  new elevation styles were verified through computed CSS and DOM inspection (light and dark
+  emulation, 375px width, no console errors, no horizontal overflow), not by eye. Treat the 3D
+  styling as "computed-style verified", not "looked at".
 - **No local PostgreSQL** was available as a fallback to Docker, so no real HTTP request was ever
   made against the running API in this sandbox. The backend's business logic is covered by unit
   tests with a mocked database (see `docs/TESTING.md`), which is real but narrower than an
@@ -46,14 +63,23 @@ exercise the endpoints in `docs/API_SPEC.md` with curl or the Swagger UI at `/ap
 - **Single locale, no i18n.** No locale routing exists, stubbed or otherwise.
 - **No file uploads, no case management, no billing** — see `docs/ROADMAP.md` for the full
   out-of-scope list.
-- **Postgres RLS is not implemented.** Tenant isolation is enforced only at the Prisma query layer.
+- **Postgres RLS is not implemented.** Tenant isolation is enforced only at the Prisma query layer
+  (and, for the raw-SQL search query, a hand-written `WHERE` clause that has only been checked by
+  inspecting the SQL template, never against a live database).
+- **Rate limiting is per-process and in-memory.** It protects a single API instance; behind several
+  replicas the effective limit multiplies. A shared store (Redis) is needed for a real deployment.
+- **Only the dashboard, settings, login, signup, onboarding and update-detail pages use the shared
+  `Surface` component.** A few inline card variants remain (list wrappers with `overflow-hidden`, the
+  chat panel, muted callouts). The elevated "3D" treatment is applied only to the dashboard KPI cards.
+- **No automated frontend tests.** Adding a runner needs a package install the sandbox could not do.
 
 ## What genuinely is real
 
 - The Next.js frontend: real code, builds cleanly, lints cleanly, manually walked through in a
   browser with no console errors, responsive at mobile width.
-- The NestJS API: real code, builds cleanly, lints cleanly, 9 passing unit tests covering
-  authentication and the role-guard logic.
+- The NestJS API: real code, builds cleanly, lints cleanly, 33 passing unit tests (mocked
+  database) covering authentication, the role guard, rate limiting, security headers, the error
+  filter, pagination, JWT-secret checks, and tenant scoping of update/search queries.
 - The Prisma schema and seed script: real, syntactically valid, `prisma generate` succeeded offline.
 - The Docker Compose configuration: real, validated by `docker compose config`.
 - The Federal Register ingestion script: real, complete code; execution unverified (see above).
