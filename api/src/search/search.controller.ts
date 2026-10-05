@@ -1,6 +1,8 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from '../auth/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import type { JwtPayload } from '../auth/jwt.strategy.js';
 import { SearchQueryDto } from './dto/search-query.dto.js';
 import { SearchService } from './search.service.js';
 
@@ -17,8 +19,8 @@ export class SearchController {
   // through a validated DTO (max 200 chars) instead of an unbounded raw
   // query param, so an oversized string can't reach the database query.
   @Get()
-  async chat(@Query() { q }: SearchQueryDto) {
-    const hits = await this.search.search(q ?? '');
+  async chat(@CurrentUser() user: JwtPayload, @Query() { q }: SearchQueryDto) {
+    const hits = await this.search.search(user.tenantId, q ?? '');
     return {
       query: q ?? '',
       resultCount: hits.length,

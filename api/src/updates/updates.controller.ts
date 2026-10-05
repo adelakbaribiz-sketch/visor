@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from '../auth/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import type { JwtPayload } from '../auth/jwt.strategy.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { CreateUpdateDto } from './dto/create-update.dto.js';
@@ -15,13 +17,13 @@ export class UpdatesController {
   constructor(private readonly updates: UpdatesService) {}
 
   @Get()
-  findAll(@Query() query: QueryUpdatesDto) {
-    return this.updates.findAll(query);
+  findAll(@CurrentUser() user: JwtPayload, @Query() query: QueryUpdatesDto) {
+    return this.updates.findAll(user.tenantId, query);
   }
 
   @Get('stats')
-  stats() {
-    return this.updates.stats();
+  stats(@CurrentUser() user: JwtPayload) {
+    return this.updates.stats(user.tenantId);
   }
 
   @Get('countries')
@@ -35,8 +37,8 @@ export class UpdatesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.updates.findOne(id);
+  findOne(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
+    return this.updates.findOne(user.tenantId, id);
   }
 
   // The one write endpoint enforcing roles at the API layer: only ADMIN and

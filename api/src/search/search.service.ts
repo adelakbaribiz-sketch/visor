@@ -27,7 +27,7 @@ export class SearchService {
    * user only typed stopwords), so short/odd queries still return
    * something reasonable instead of nothing.
    */
-  async search(query: string, limit = 5): Promise<SearchHit[]> {
+  async search(tenantId: string, query: string, limit = 5): Promise<SearchHit[]> {
     const q = query.trim();
     if (!q) return [];
 
@@ -47,6 +47,7 @@ export class SearchService {
       JOIN "Country" c ON c.id = u."countryId"
       WHERE to_tsvector('english', u.title || ' ' || u.summary || ' ' || array_to_string(u.tags, ' '))
             @@ websearch_to_tsquery('english', ${q})
+        AND (u."tenantId" IS NULL OR u."tenantId" = ${tenantId})
       ORDER BY rank DESC, u."publishedAt" DESC
       LIMIT ${limit}
     `;
@@ -66,7 +67,8 @@ export class SearchService {
         0::float AS rank
       FROM "ImmigrationUpdate" u
       JOIN "Country" c ON c.id = u."countryId"
-      WHERE u.title ILIKE ${like} OR u.summary ILIKE ${like}
+      WHERE (u.title ILIKE ${like} OR u.summary ILIKE ${like})
+        AND (u."tenantId" IS NULL OR u."tenantId" = ${tenantId})
       ORDER BY u."publishedAt" DESC
       LIMIT ${limit}
     `;
