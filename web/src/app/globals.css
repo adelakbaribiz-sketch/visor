@@ -50,6 +50,23 @@
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /*
+   * Elevation + motion tokens (added in the upgrade pass — see
+   * docs/UPGRADE-REPORT.md "3D / spatial design"). Shadows are tinted with
+   * the brand navy (`--navy-950`, rgb(11,24,48)) rather than neutral grey,
+   * so depth reads as part of this identity rather than a generic
+   * "SaaS card kit" look. Used ONLY on semantically important surfaces
+   * (KPI stat cards, hero panels) via `ElevatedSurface` — everything else
+   * (tables, forms, lists) stays flat and fast, per the brief's "3D is
+   * semantic, not decorative" rule.
+   */
+  --elevation-1: 0 1px 2px rgba(11, 24, 48, 0.06), 0 1px 1px rgba(11, 24, 48, 0.04);
+  --elevation-2: 0 8px 20px rgba(11, 24, 48, 0.10), 0 2px 6px rgba(11, 24, 48, 0.06);
+
+  --motion-fast: 120ms;
+  --motion-base: 180ms;
+  --motion-ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -63,6 +80,25 @@
     --border-strong: #324564;
 
     --gold-100: #2a2110;
+
+    /* Dark surfaces need a darker, tighter shadow plus a faint top
+       highlight to read as "raised" against an already-dark background —
+       a plain shadow disappears, and just inverting the light-mode value
+       looks muddy. */
+    --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    --elevation-2: 0 10px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+}
+
+/* Respect reduced-motion system-wide: every transition/animation this app
+   ships (hover-lift, fades) collapses to effectively instant rather than
+   being removed selectively per component. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

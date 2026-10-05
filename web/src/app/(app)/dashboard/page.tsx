@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PriorityBadge, DemoDataBadge } from "@/components/Badge";
 import { StatCard } from "@/components/StatCard";
+import { Surface } from "@/components/Surface";
 import { BarChart } from "@/components/charts/BarChart";
 import { Sparkline } from "@/components/charts/Sparkline";
 import { getCountries, getUpdates, getUsageStats } from "@/lib/data/client";
@@ -41,7 +42,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-lg border border-border bg-surface p-5 lg:col-span-2">
+        <Surface className="lg:col-span-2">
           <h2 className="font-display text-base text-navy-900 dark:text-foreground">
             Updates by week
           </h2>
@@ -49,8 +50,8 @@ export default async function DashboardPage() {
           <div className="mt-4">
             <Sparkline data={stats.updatesTimeline} />
           </div>
-        </div>
-        <div className="rounded-lg border border-border bg-surface p-5">
+        </Surface>
+        <Surface>
           <h2 className="font-display text-base text-navy-900 dark:text-foreground">
             By priority
           </h2>
@@ -66,10 +67,10 @@ export default async function DashboardPage() {
               ),
             )}
           </div>
-        </div>
+        </Surface>
       </div>
 
-      <div className="rounded-lg border border-border bg-surface p-5">
+      <Surface>
         <h2 className="font-display text-base text-navy-900 dark:text-foreground">
           Updates by country
         </h2>
@@ -81,9 +82,9 @@ export default async function DashboardPage() {
             }))}
           />
         </div>
-      </div>
+      </Surface>
 
-      <div className="rounded-lg border border-border bg-surface p-5">
+      <Surface>
         <div className="flex items-center justify-between">
           <h2 className="font-display text-base text-navy-900 dark:text-foreground">
             Most recent updates
@@ -113,7 +114,7 @@ export default async function DashboardPage() {
             </li>
           ))}
         </ul>
-      </div>
+      </Surface>
     </div>
   );
 }
