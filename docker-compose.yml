@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://visor:visor@postgres:5432/visor?schema=public
-      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET to a unique value of 32+ chars, e.g. JWT_SECRET=$(openssl rand -hex 32) docker compose up}
       PORT: 4100
       CORS_ORIGIN: http://localhost:3400
     ports:
