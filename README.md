@@ -48,9 +48,13 @@ authoritative real-vs-mock breakdown.
 | **Alerts** | **Landing page** |
 | ![In-app alert records with priority and read state](docs/screenshots/alerts.png) | ![Landing page](docs/screenshots/landing.png) |
 
-| Mobile | Dark theme |
-|---|---|
-| <img src="docs/screenshots/mobile.png" alt="Dashboard on a phone-sized screen" width="260"> | ![Dashboard in dark theme](docs/screenshots/dashboard-dark.png) |
+<p>
+  <img src="docs/screenshots/mobile.png" alt="Dashboard on a phone-sized screen" width="240">
+  &nbsp;
+  <img src="docs/screenshots/dashboard-dark.png" alt="Dashboard in dark theme" width="600">
+</p>
+
+*Left: phone-sized screen (390 px wide). Right: dark theme.*
 
 *Captured from the frontend demo running locally on its seeded sample records (no backend). Ask Visor
 is keyword search, not an AI model; alerts are in-app records only — no email/Telegram delivery.*
