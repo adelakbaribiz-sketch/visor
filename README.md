@@ -1,5 +1,7 @@
 # Visor
 
+**Immigration rules change weekly. Your firm shouldn't find out from a client.** Visor tracks embassy and government rule changes, makes them searchable, and alerts the right people.
+
 An MVP demo of an immigration change-intelligence SaaS for immigration lawyers and consultants:
 track embassy/government rule changes, search them in plain language, and see alert records — all
 in one place.
@@ -8,6 +10,8 @@ in one place.
 customer-validated business. See `docs/PROJECT_CONTEXT.md` for the full disclosure of what was
 invented versus real, and `docs/LIMITATIONS.md` for exactly what has and hasn't been verified to
 run.
+
+![Dashboard — tracked updates, weekly trend, priority mix and updates by country (seeded demo records)](docs/screenshots/dashboard.png)
 
 ## Problem
 
@@ -35,6 +39,25 @@ public source (the U.S. Federal Register).
 
 See `docs/PROJECT_CONTEXT.md` for the full gap-analysis table and `docs/LIMITATIONS.md` for the
 authoritative real-vs-mock breakdown.
+
+## Screenshots
+
+| Immigration updates (search & filter) | Ask Visor (keyword search chat) |
+|---|---|
+| ![Searchable table of tracked immigration updates by country, visa type and priority](docs/screenshots/updates.png) | ![Ask Visor returning matching update records for a keyword query](docs/screenshots/ask-visor.png) |
+| **Alerts** | **Landing page** |
+| ![In-app alert records with priority and read state](docs/screenshots/alerts.png) | ![Landing page](docs/screenshots/landing.png) |
+
+<p>
+  <img src="docs/screenshots/mobile.png" alt="Dashboard on a phone-sized screen" width="240">
+  &nbsp;
+  <img src="docs/screenshots/dashboard-dark.png" alt="Dashboard in dark theme" width="600">
+</p>
+
+*Left: phone-sized screen (390 px wide). Right: dark theme.*
+
+*Captured from the frontend demo running locally on its seeded sample records (no backend). Ask Visor
+is keyword search, not an AI model; alerts are in-app records only — no email/Telegram delivery.*
 
 ## Architecture
 
