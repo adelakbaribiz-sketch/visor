@@ -1,5 +1,7 @@
 # Visor
 
+**Immigration rules change weekly. Your firm shouldn't find out from a client.** Visor tracks embassy and government rule changes, makes them searchable, and alerts the right people.
+
 An MVP demo of an immigration change-intelligence SaaS for immigration lawyers and consultants:
 track embassy/government rule changes, search them in plain language, and see alert records — all
 in one place.
@@ -45,6 +47,10 @@ authoritative real-vs-mock breakdown.
 | ![Searchable table of tracked immigration updates by country, visa type and priority](docs/screenshots/updates.png) | ![Ask Visor returning matching update records for a keyword query](docs/screenshots/ask-visor.png) |
 | **Alerts** | **Landing page** |
 | ![In-app alert records with priority and read state](docs/screenshots/alerts.png) | ![Landing page](docs/screenshots/landing.png) |
+
+| Mobile | Dark theme |
+|---|---|
+| <img src="docs/screenshots/mobile.png" alt="Dashboard on a phone-sized screen" width="260"> | ![Dashboard in dark theme](docs/screenshots/dashboard-dark.png) |
 
 *Captured from the frontend demo running locally on its seeded sample records (no backend). Ask Visor
 is keyword search, not an AI model; alerts are in-app records only — no email/Telegram delivery.*
