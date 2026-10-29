@@ -9,6 +9,8 @@ customer-validated business. See `docs/PROJECT_CONTEXT.md` for the full disclosu
 invented versus real, and `docs/LIMITATIONS.md` for exactly what has and hasn't been verified to
 run.
 
+![Dashboard — tracked updates, weekly trend, priority mix and updates by country (seeded demo records)](docs/screenshots/dashboard.png)
+
 ## Problem
 
 Immigration rules change constantly, across dozens of embassy/government/news sources per
@@ -35,6 +37,17 @@ public source (the U.S. Federal Register).
 
 See `docs/PROJECT_CONTEXT.md` for the full gap-analysis table and `docs/LIMITATIONS.md` for the
 authoritative real-vs-mock breakdown.
+
+## Screenshots
+
+| Immigration updates (search & filter) | Ask Visor (keyword search chat) |
+|---|---|
+| ![Searchable table of tracked immigration updates by country, visa type and priority](docs/screenshots/updates.png) | ![Ask Visor returning matching update records for a keyword query](docs/screenshots/ask-visor.png) |
+| **Alerts** | **Landing page** |
+| ![In-app alert records with priority and read state](docs/screenshots/alerts.png) | ![Landing page](docs/screenshots/landing.png) |
+
+*Captured from the frontend demo running locally on its seeded sample records (no backend). Ask Visor
+is keyword search, not an AI model; alerts are in-app records only — no email/Telegram delivery.*
 
 ## Architecture
 
